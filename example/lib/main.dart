@@ -1,158 +1,23 @@
+import 'package:amap_location_example/location_get.dart';
+import 'package:amap_location_example/location_listen.dart';
+import 'package:amap_location_example/location_map.dart';
 import 'package:flutter/material.dart';
 import 'package:amap_location/amap_location.dart';
-import 'package:simple_permissions/simple_permissions.dart';
-import 'package:easy_alert/easy_alert.dart';
 
 void main() {
-  /*============*/
-  //设置ios的key
-  /*=============*/
-
-  /*============*/
-  //设置ios的key
-  /*=============*/
-
   runApp(new MaterialApp(
     home: new Home(),
     routes: {
       "/location/get": (BuildContext context) => new LocationGet(),
-      "/location/listen": (BuildContext content) => new LocationListen()
+      "/location/listen": (BuildContext content) => new LocationListen(),
+      "/location/map": (BuildContext content) => new LocationMap()
     },
   ));
-}
-
-class _LocationGetState extends State {
-  AMapLocation _loc;
-
-
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-        appBar: new AppBar(
-          title: new Text('直接获取定位'),
-        ),
-        body: new Center(
-          child: _loc == null
-              ? new Text("正在定位")
-              : new Text("定位成功:${_loc.formattedAddress}"),
-        ));
-  }
-
-  void _checkPersmission() async {
-    bool hasPermission =
-        await SimplePermissions.checkPermission(Permission.WhenInUseLocation);
-    if (!hasPermission) {
-      PermissionStatus requestPermissionResult =
-          await SimplePermissions.requestPermission(
-              Permission.WhenInUseLocation);
-      if (requestPermissionResult != PermissionStatus.authorized) {
-        Alert.alert(context, title: "申请定位权限失败");
-        return;
-      }
-    }
-    AMapLocation loc = await AMapLocationClient.getLocation(true);
-    setState(() {
-      _loc = loc;
-    });
-  }
-
-  @override
-  void initState() {
-    _checkPersmission();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    //这里可以停止定位
-    //AMapLocationClient.stopLocation();
-
-    super.dispose();
-  }
-}
-
-class LocationGet extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => new _LocationGetState();
-}
-
-String getLocationStr(AMapLocation loc) {
-  if (loc == null) {
-    return "正在定位";
-  }
-
-  if (loc.isSuccess()) {
-    if (loc.hasAddress()) {
-      return "定位成功: \n时间${loc.timestamp}\n经纬度:${loc.latitude} ${loc.longitude}\n 地址:${loc.formattedAddress} 城市:${loc.city} 省:${loc.province}";
-    } else {
-      return "定位成功: \n时间${loc.timestamp}\n经纬度:${loc.latitude} ${loc.longitude}\n ";
-    }
-  } else {
-    return "定位失败: \n错误:{code=${loc.code},description=${loc.description}";
-  }
-}
-
-class _LocationListenState extends State {
-  String location;
-
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-        appBar: new AppBar(
-          title: new Text('监听定位改变'),
-        ),
-        body: new Center(
-          child: new Text(location),
-        ));
-  }
-
-  void _checkPersmission() async {
-    bool hasPermission =
-        await SimplePermissions.checkPermission(Permission.WhenInUseLocation);
-    if (!hasPermission) {
-      PermissionStatus requestPermissionResult =
-          await SimplePermissions.requestPermission(
-              Permission.WhenInUseLocation);
-      if (requestPermissionResult != PermissionStatus.authorized) {
-        Alert.alert(context, title: "申请定位权限失败");
-        return;
-      }
-    }
-    AMapLocationClient.onLocationUpate.listen((AMapLocation loc) {
-      if (!mounted) return;
-      setState(() {
-        location = getLocationStr(loc);
-      });
-    });
-
-    AMapLocationClient.startLocation();
-  }
-
-  @override
-  void initState() {
-    location = getLocationStr(null);
-    _checkPersmission();
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    //注意这里停止监听
-    AMapLocationClient.stopLocation();
-    super.dispose();
-  }
-}
-
-class LocationListen extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => new _LocationListenState();
 }
 
 class _HomeState extends State<Home> {
   @override
   void initState() {
-
     AMapLocationClient.setApiKey("03c4bf8bce858794df1739b475606ace");
     //启动客户端,这里设置ios端的精度小一点
     AMapLocationClient.startup(new AMapLocationOption(
@@ -208,7 +73,12 @@ class _HomeState extends State<Home> {
               "subtitle": "不需要先启用监听就可以直接获取定位",
               "url": "/location/get"
             },
-            {"title": "监听定位", "subtitle": "启动定位改变监听", "url": "/location/listen"}
+            {
+              "title": "监听定位",
+              "subtitle": "启动定位改变监听",
+              "url": "/location/listen"
+            },
+            {"title": "进入地图", "subtitle": "展示地图", "url": "/location/map"}
           ]),
         )));
   }
