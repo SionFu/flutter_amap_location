@@ -17,6 +17,10 @@ class MyMapView implements PlatformView {
     MyMapView(Context context, BinaryMessenger messenger, int id, Map<String, Object> params) {
         TextView myNativeView = new TextView(context);
         myNativeView.setText("我是来自Android的原生TextView");
+        if (params.containsKey("myContent")) {
+            String myContent = (String) params.get("myContent");
+            myNativeView.setText(myContent);
+        }
         this.myNativeView = myNativeView;
     }
 

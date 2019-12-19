@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:amap_location/amap_location.dart';
 import 'package:simple_permissions/simple_permissions.dart';
 import 'package:easy_alert/easy_alert.dart';
-import 'package:amap_location/amap_location.dart';
 
 String getLocationStr(AMapLocation loc) {
   if (loc == null) {
@@ -35,12 +34,9 @@ class _LocationListenState extends State {
   }
 
   void _checkPersmission() async {
-    bool hasPermission =
-    await SimplePermissions.checkPermission(Permission.WhenInUseLocation);
+    bool hasPermission = await SimplePermissions.checkPermission(Permission.WhenInUseLocation);
     if (!hasPermission) {
-      PermissionStatus requestPermissionResult =
-      await SimplePermissions.requestPermission(
-          Permission.WhenInUseLocation);
+      PermissionStatus requestPermissionResult = await SimplePermissions.requestPermission(Permission.WhenInUseLocation);
       if (requestPermissionResult != PermissionStatus.authorized) {
         Alert.alert(context, title: "申请定位权限失败");
         return;

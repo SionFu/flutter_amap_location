@@ -15,14 +15,36 @@ void main() {
   ));
 }
 
+class Home extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return new _HomeState();
+  }
+}
+
 class _HomeState extends State<Home> {
+  var myMap = [
+    {
+      "title": "直接获取定位",
+      "subtitle": "不需要先启用监听就可以直接获取定位",
+      "url": "/location/get"
+    },
+    {"title": "监听定位", "subtitle": "启动定位改变监听", "url": "/location/listen"},
+    {"title": "进入地图", "subtitle": "展示地图", "url": "/location/map"}
+  ];
+
   @override
   void initState() {
+    super.initState();
+    initIOS();
+  }
+
+  //初始化ios
+  initIOS() {
     AMapLocationClient.setApiKey("03c4bf8bce858794df1739b475606ace");
     //启动客户端,这里设置ios端的精度小一点
     AMapLocationClient.startup(new AMapLocationOption(
         desiredAccuracy: CLLocationAccuracy.kCLLocationAccuracyHundredMeters));
-    super.initState();
   }
 
   @override
@@ -67,26 +89,7 @@ class _HomeState extends State<Home> {
         ),
         body: new Scrollbar(
             child: new ListView(
-          children: render(context, [
-            {
-              "title": "直接获取定位",
-              "subtitle": "不需要先启用监听就可以直接获取定位",
-              "url": "/location/get"
-            },
-            {
-              "title": "监听定位",
-              "subtitle": "启动定位改变监听",
-              "url": "/location/listen"
-            },
-            {"title": "进入地图", "subtitle": "展示地图", "url": "/location/map"}
-          ]),
+          children: render(context, myMap),
         )));
-  }
-}
-
-class Home extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return new _HomeState();
   }
 }
