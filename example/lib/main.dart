@@ -7,7 +7,7 @@ void main() {
   /*============*/
   //设置ios的key
   /*=============*/
-  AMapLocationClient.setApiKey("a5bae506b2d053ed4ae7827f38b1766d");
+
   /*============*/
   //设置ios的key
   /*=============*/
@@ -23,6 +23,7 @@ void main() {
 
 class _LocationGetState extends State {
   AMapLocation _loc;
+
 
   @override
   Widget build(BuildContext context) {
@@ -151,6 +152,8 @@ class LocationListen extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   void initState() {
+
+    AMapLocationClient.setApiKey("03c4bf8bce858794df1739b475606ace");
     //启动客户端,这里设置ios端的精度小一点
     AMapLocationClient.startup(new AMapLocationOption(
         desiredAccuracy: CLLocationAccuracy.kCLLocationAccuracyHundredMeters));

@@ -38,11 +38,11 @@ android {
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        manifestPlaceholders = [
-                AMAP_KEY : "aa9f0cf8574400f2af0078392c556e25", /// 高德地图key
-        ]
+//        manifestPlaceholders = [
+//                AMAP_KEY : "45c246ff33bb644b958118146f9fc6e3", /// 高德地图key
+//        ]
     }
 
     signingConfigs {
@@ -76,6 +76,6 @@ flutter {
 dependencies {
     implementation 'com.amap.api:location:latest.integration'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
 }
