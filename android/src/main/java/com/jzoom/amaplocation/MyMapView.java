@@ -16,8 +16,16 @@ import com.amap.api.maps2d.AMap;
 import com.amap.api.maps2d.CameraUpdateFactory;
 import com.amap.api.maps2d.LocationSource;
 import com.amap.api.maps2d.MapView;
+import com.amap.api.maps2d.model.CameraPosition;
 import com.amap.api.maps2d.model.Marker;
+import com.amap.api.maps2d.model.MarkerOptions;
 import com.amap.api.maps2d.model.MyLocationStyle;
+import com.amap.api.services.core.AMapException;
+import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.geocoder.GeocodeResult;
+import com.amap.api.services.geocoder.GeocodeSearch;
+import com.amap.api.services.geocoder.RegeocodeQuery;
+import com.amap.api.services.geocoder.RegeocodeResult;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,12 +36,13 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.platform.PlatformView;
 
-class MyMapView implements PlatformView, LocationSource,
+class MyMapView implements PlatformView, LocationSource,GeocodeSearch.OnGeocodeSearchListener,
         AMapLocationListener, MethodChannel.MethodCallHandler, Application.ActivityLifecycleCallbacks {
 
     private boolean disposed = false;
     private MapView mapView;
     private AMap aMap;
+    private GeocodeSearch geocoderSearch;
     private OnLocationChangedListener mListener;
     private AMapLocationClient mlocationClient;
     private AMapLocationClientOption mLocationOption;
@@ -78,27 +87,44 @@ class MyMapView implements PlatformView, LocationSource,
     private void setUpMap() {
         // 自定义系统定位小蓝点
         MyLocationStyle myLocationStyle = new MyLocationStyle();
-        myLocationStyle.strokeColor(Color.BLACK);// 设置圆形的边框颜色
-        myLocationStyle.radiusFillColor(Color.argb(100, 0, 0, 180));// 设置圆形的填充颜色
+//        myLocationStyle.strokeColor(Color.BLACK);// 设置圆形的边框颜色
+//        myLocationStyle.radiusFillColor(Color.argb(100, 0, 0, 180));// 设置圆形的填充颜色
         // myLocationStyle.anchor(int,int)//设置小蓝点的锚点
         myLocationStyle.strokeWidth(1.0f);// 设置圆形的边框粗细
         aMap.setMyLocationStyle(myLocationStyle);
-        aMap.moveCamera(CameraUpdateFactory.zoomTo(20));
+        aMap.moveCamera(CameraUpdateFactory.zoomTo(18));
         aMap.setLocationSource(this);// 设置定位监听
         aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
         aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
-        // 定义 Marker 点击事件监听
-        AMap.OnMarkerClickListener markerClickListener = new AMap.OnMarkerClickListener() {
-            // marker 对象被点击时回调的接口
-            // 返回 true 则表示接口已响应事件，否则返回false
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                return false;
-            }
-        };
-// 绑定 Marker 被点击事件
-        aMap.setOnMarkerClickListener(markerClickListener);
 
+        aMap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(CameraPosition cameraPosition) {
+
+            }
+
+            @Override
+            public void onCameraChangeFinish(CameraPosition cameraPosition) {
+
+
+                MarkerOptions markerOption = new MarkerOptions()
+                    .position(cameraPosition.target)
+                    .title("22")
+                    .snippet("233");
+//                Marker marker = new Marker(markerOption);
+//                marker.setPosition(cameraPosition.target);
+                aMap.clear();
+                aMap.addMarker(markerOption);
+
+                LatLonPoint latLonPoint = new LatLonPoint(cameraPosition.target.latitude,cameraPosition.target.longitude);
+                RegeocodeQuery query = new RegeocodeQuery(latLonPoint, 200,GeocodeSearch.AMAP);
+
+                geocoderSearch.getFromLocationAsyn(query);
+            }
+        });
+
+        geocoderSearch = new GeocodeSearch(mContext);
+        geocoderSearch.setOnGeocodeSearchListener(this);
     }
 
 
@@ -270,4 +296,23 @@ class MyMapView implements PlatformView, LocationSource,
     }
 
 
+    @Override
+    public void onRegeocodeSearched(RegeocodeResult result, int rCode) {
+        if (rCode == AMapException.CODE_AMAP_SUCCESS) {
+            if (result != null && result.getRegeocodeAddress() != null
+                    && result.getRegeocodeAddress().getFormatAddress() != null) {
+              String  addressName = result.getRegeocodeAddress().getFormatAddress() + "附近";
+
+              Log.e("wilson 点击返回位置 ",addressName);
+              Log.e("wilson 点击返回位置 ",result.toString());
+            } else {
+            }
+        } else {
+        }
+    }
+
+    @Override
+    public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
+        Log.e("wilson",geocodeResult.toString());
+    }
 }
