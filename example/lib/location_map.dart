@@ -1,7 +1,9 @@
 import 'dart:io';
-
+import 'package:amap_location/amap_location.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import 'location_listen.dart';
 
 class LocationMap extends StatefulWidget {
   @override
@@ -9,6 +11,25 @@ class LocationMap extends StatefulWidget {
 }
 
 class _LocationMapState extends State<LocationMap> {
+  String location = "";
+
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
+  init() {
+    AMapLocationClient.onLocationUpate.listen((AMapLocation loc) {
+
+      if (!mounted) return;
+      setState(() {
+        location = getLocationStr(loc);
+        print(location);
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget mapView;
@@ -28,8 +49,15 @@ class _LocationMapState extends State<LocationMap> {
         title: Text("展示原生地图"),
       ),
       body: Container(
-        child: Center(
-          child: mapView,
+        child: Column(
+          children: <Widget>[
+            Container(
+//              width: 200,
+              height: 400,
+              child: mapView,
+            ),
+            Text(location)
+          ],
         ),
       ),
     );

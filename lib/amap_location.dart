@@ -220,6 +220,12 @@ class AMapLocationClient {
           _locationUpdateStreamController.add(AMapLocation.fromMap(args));
         }
         break;
+      case "location_info":
+        {
+          Map args = call.arguments;
+          _locationUpdateStreamController.add(AMapLocation.fromMap(args));
+        }
+        break;
     }
     return new Future.value("");
   }

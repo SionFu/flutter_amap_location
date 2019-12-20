@@ -12,6 +12,7 @@ import com.amap.api.location.AMapLocationListener;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -53,9 +54,7 @@ public class AmapLocationPlugin implements MethodCallHandler, AMapLocationListen
     public static void registerWith(Registrar registrar) {
         final MethodChannel channel = new MethodChannel(registrar.messenger(), "amap_location");
         channel.setMethodCallHandler(new AmapLocationPlugin(registrar, channel));
-
-        registrar.platformViewRegistry().registerViewFactory("location_map", new MyMapViewFactory(registrar.messenger()));
-
+        registrar.platformViewRegistry().registerViewFactory("location_map",   new MyMapViewFactory( new AtomicInteger(0),registrar));
 
     }
 
