@@ -100,13 +100,13 @@
     double lat=   _mapView.centerCoordinate.latitude;
      double lon =   _mapView.centerCoordinate.longitude;
     
-        NSLog(@"lon %f ",lon);
-        NSLog(@"lat %f ",lat);
+//        NSLog(@"lon %f ",lon);
+//        NSLog(@"lat %f ",lat);
     NSMutableArray *annotations= [NSMutableArray array];
     CLLocationCoordinate2D coordinates[1] = {{lat,lon}};
     MAPointAnnotation *a1 = [[MAPointAnnotation alloc] init];
     a1.coordinate = coordinates[0];
-    a1.title = @"wilson";
+    a1.title = @"位置";
     [annotations addObject:a1];
     
     [_mapView removeAnnotations: self.annotations];
