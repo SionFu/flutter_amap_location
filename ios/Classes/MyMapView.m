@@ -50,9 +50,11 @@
       
       
               self.gpsButton = [self makeGPSButtonView];
-                 self.gpsButton.center = CGPointMake(CGRectGetMidX(self.gpsButton.bounds) + 10,
-                                                     self.view.bounds.size.height -  CGRectGetMidY(self.gpsButton.bounds) - 20);
-                 self.gpsButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin;
+//                 self.gpsButton.center = CGPointMake(CGRectGetMidX(self.gpsButton.bounds) + 10,
+//                                                     self.view.bounds.size.height -  CGRectGetMidY(self.gpsButton.bounds) - 20);
+       // self.gpsButton.center = CGPointMake(100,100);
+      self.gpsButton.frame = CGRectMake(10, 10, 25, 25);
+//                 self.gpsButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin;
       
       
       
@@ -63,7 +65,7 @@
 }
 
 - (UIButton *)makeGPSButtonView {
-    UIButton *ret = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+    UIButton *ret = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
     ret.backgroundColor = [UIColor whiteColor];
     ret.layer.cornerRadius = 4;
     
@@ -83,7 +85,7 @@
 
 - (nonnull UIView *)view {
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 200, 200)];
-
+//    [view setBackgroundColor:UIColor.yellowColor];
     [view addSubview:_mapView];
     [view addSubview:self.gpsButton];
     return view;
