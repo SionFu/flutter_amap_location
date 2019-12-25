@@ -15,7 +15,7 @@
 //#import <AMapFoundationKit/AMapFoundationKit.h>
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MyMapView :  NSObject<FlutterPlatformView,FlutterApplicationLifeCycleDelegate>
+@interface MyMapView :  NSObject<FlutterPlatformView>
 
 
 

@@ -4,15 +4,6 @@
 #import <AMapLocationKit/AMapLocationKit.h>
 #import "MyMapViewFactory.h"
 
-/*
-static NSDictionary* DesiredAccuracy = @{@"kCLLocationAccuracyBest":@(kCLLocationAccuracyBest),
-                                         @"kCLLocationAccuracyNearestTenMeters":@(kCLLocationAccuracyNearestTenMeters),
-                                         @"kCLLocationAccuracyHundredMeters":@(kCLLocationAccuracyHundredMeters),
-                                         @"kCLLocationAccuracyKilometer":@(kCLLocationAccuracyKilometer),
-                                         @"kCLLocationAccuracyThreeKilometers":@(kCLLocationAccuracyThreeKilometers),
-                                         
-                                         };*/
-
 
 @interface AmapLocationPlugin()<AMapLocationManagerDelegate>
 
@@ -34,9 +25,14 @@ static NSDictionary* DesiredAccuracy = @{@"kCLLocationAccuracyBest":@(kCLLocatio
     
     MyMapViewFactory *myMapViewFactory = [[MyMapViewFactory alloc] initWithMessenger:registrar.messenger channel:channel];
     [registrar registerViewFactory:myMapViewFactory withId:@"location_map"];
+    [registrar addApplicationDelegate:instance];
 }
 
+//applicationDidEnterBackground
 
+- (void)applicationDidEnterBackground:(UIApplication *)application{
+      NSLog(@" applicationDidEnterBackground");
+}
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
     NSString* method = call.method;

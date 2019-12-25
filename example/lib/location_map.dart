@@ -5,34 +5,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:simple_permissions/simple_permissions.dart';
 
-import 'location_listen.dart';
-
 class LocationMap extends StatefulWidget {
+  final Function callBack;
+
+  const LocationMap({Key key, this.callBack}) : super(key: key);
+
   @override
   _LocationMapState createState() => _LocationMapState();
 }
 
 class _LocationMapState extends State<LocationMap> {
   String location = "";
-
+  AMapLocation _loc ;
   @override
   void initState() {
     super.initState();
-
     _checkPersmission();
-//    init();
   }
-
-//  init() {
-//    AMapLocationClient.onLocationUpate.listen((AMapLocation loc) {
-//
-//      if (!mounted) return;
-//      setState(() {
-//        location = getLocationStr(loc);
-//        print(location);
-//      });
-//    });
-//  }
 
   void _checkPersmission() async {
     bool hasPermission =
@@ -51,7 +40,8 @@ class _LocationMapState extends State<LocationMap> {
       if (!mounted) return;
       setState(() {
         location = getLocationStr(loc);
-        print(location);
+        _loc =loc;
+//        print(location);
       });
     });
   }
@@ -59,7 +49,6 @@ class _LocationMapState extends State<LocationMap> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final height = size.height - 3 * 56;
 
     Widget mapView;
     if ((Platform.isAndroid)) {
@@ -82,26 +71,32 @@ class _LocationMapState extends State<LocationMap> {
               "确定",
               style: TextStyle(color: Colors.white),
             ),
-            onPressed: (){
-
+            onPressed: () {
+              if(_loc!=null){
+                widget.callBack(_loc);
+              }
             },
           )
         ],
       ),
       body: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
+        child: Stack(
+          alignment: AlignmentDirectional.bottomStart,
           children: <Widget>[
             Container(
 //              width: 200,
-              height: height,
+//              height: height,
               child: mapView,
             ),
-            Expanded(
-              child: Container(),
-            ),
-            Container(child: Text(location))
+//            Expanded(
+//              child: Container(),
+//            ),
+            Container(
+                padding: EdgeInsets.only(top: 20),
+                width: size.width,
+                height: 100,
+                color: Colors.white,
+                child: Text(location))
           ],
         ),
       ),
@@ -115,7 +110,7 @@ class _LocationMapState extends State<LocationMap> {
 
     if (loc.isSuccess()) {
       if (loc.hasAddress()) {
-        return "定位成功:\n地址:${loc.formattedAddress}";
+        return "定位成功\n:${loc.formattedAddress}";
       } else {
         return "定位成功:经纬度:${loc.latitude} ${loc.longitude}\n ";
       }

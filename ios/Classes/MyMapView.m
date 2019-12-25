@@ -11,9 +11,6 @@
 #import <MAMapKit/MAMapKit.h>
 #import <AMapFoundationKit/AMapFoundationKit.h>
 #import <AMapSearchKit/AMapSearchKit.h>
-#define RightCallOutTag 1
-#define LeftCallOutTag 2
-
 
 @interface MyMapView ()<MAMapViewDelegate,AMapSearchDelegate>
 @property (nonatomic, strong) UIButton *gpsButton;
