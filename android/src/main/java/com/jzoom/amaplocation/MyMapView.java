@@ -36,7 +36,7 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.platform.PlatformView;
 
-class MyMapView implements PlatformView, LocationSource,GeocodeSearch.OnGeocodeSearchListener,
+class MyMapView implements PlatformView, LocationSource, GeocodeSearch.OnGeocodeSearchListener,
         AMapLocationListener, MethodChannel.MethodCallHandler, Application.ActivityLifecycleCallbacks {
 
     private boolean disposed = false;
@@ -87,8 +87,8 @@ class MyMapView implements PlatformView, LocationSource,GeocodeSearch.OnGeocodeS
     private void setUpMap() {
         // 自定义系统定位小蓝点
         MyLocationStyle myLocationStyle = new MyLocationStyle();
-//        myLocationStyle.strokeColor(Color.BLACK);// 设置圆形的边框颜色
-//        myLocationStyle.radiusFillColor(Color.argb(100, 0, 0, 180));// 设置圆形的填充颜色
+        myLocationStyle.strokeColor(Color.BLACK);// 设置圆形的边框颜色
+        myLocationStyle.radiusFillColor(Color.argb(100, 0, 0, 180));// 设置圆形的填充颜色
         // myLocationStyle.anchor(int,int)//设置小蓝点的锚点
         myLocationStyle.strokeWidth(1.0f);// 设置圆形的边框粗细
         aMap.setMyLocationStyle(myLocationStyle);
@@ -108,16 +108,16 @@ class MyMapView implements PlatformView, LocationSource,GeocodeSearch.OnGeocodeS
 
 
                 MarkerOptions markerOption = new MarkerOptions()
-                    .position(cameraPosition.target)
-                    .title("22")
-                    .snippet("233");
+                        .position(cameraPosition.target)
+                        .title("22")
+                        .snippet("233");
 //                Marker marker = new Marker(markerOption);
 //                marker.setPosition(cameraPosition.target);
                 aMap.clear();
                 aMap.addMarker(markerOption);
 
-                LatLonPoint latLonPoint = new LatLonPoint(cameraPosition.target.latitude,cameraPosition.target.longitude);
-                RegeocodeQuery query = new RegeocodeQuery(latLonPoint, 200,GeocodeSearch.AMAP);
+                LatLonPoint latLonPoint = new LatLonPoint(cameraPosition.target.latitude, cameraPosition.target.longitude);
+                RegeocodeQuery query = new RegeocodeQuery(latLonPoint, 200, GeocodeSearch.AMAP);
 
                 geocoderSearch.getFromLocationAsyn(query);
             }
@@ -133,7 +133,7 @@ class MyMapView implements PlatformView, LocationSource,GeocodeSearch.OnGeocodeS
         if (mListener != null && amapLocation != null) {
             if (amapLocation != null && amapLocation.getErrorCode() == 0) {
                 mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
-                resultToMap(amapLocation);
+                //  resultToMap(amapLocation);
             } else {
                 String errText = "定位失败," + amapLocation.getErrorCode() + ": " + amapLocation.getErrorInfo();
                 Log.e("AmapErr", errText);
@@ -301,10 +301,11 @@ class MyMapView implements PlatformView, LocationSource,GeocodeSearch.OnGeocodeS
         if (rCode == AMapException.CODE_AMAP_SUCCESS) {
             if (result != null && result.getRegeocodeAddress() != null
                     && result.getRegeocodeAddress().getFormatAddress() != null) {
-              String  addressName = result.getRegeocodeAddress().getFormatAddress() + "附近";
-
-              Log.e("wilson 点击返回位置 ",addressName);
-              Log.e("wilson 点击返回位置 ",result.toString());
+                String addressName = result.getRegeocodeAddress().getFormatAddress() + "附近";
+                LatLonPoint latLonPoint = result.getRegeocodeQuery().getPoint();
+                Log.e("wilson 点击返回位置 ", addressName);
+                Log.e("wilson 点击返回位置 ", latLonPoint.toString());
+                resultToMapByResult(result);
             } else {
             }
         } else {
@@ -313,6 +314,31 @@ class MyMapView implements PlatformView, LocationSource,GeocodeSearch.OnGeocodeS
 
     @Override
     public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
-        Log.e("wilson",geocodeResult.toString());
+        Log.e("wilson", geocodeResult.toString());
+    }
+
+
+    private Map resultToMapByResult(RegeocodeResult result) {
+//        result.a;
+//
+        Map map = new HashMap();
+        LatLonPoint latLonPoint = result.getRegeocodeQuery().getPoint();
+        String city = result.getRegeocodeAddress().getCity();
+        String addressName = result.getRegeocodeAddress().getFormatAddress();
+        Log.e("wilson 点击返回位置 ", addressName);
+        Log.e("wilson 点击返回位置 ", latLonPoint.toString());
+        if (result != null) {
+            map.put("success", true);
+            map.put("formattedAddress", addressName);
+            map.put("latitude", latLonPoint.getLatitude());
+            map.put("longitude", latLonPoint.getLongitude());
+            map.put("city", city);
+        }else{
+            map.put("success", false);
+        }
+
+        mapChannel.invokeMethod("location_info", map);
+        return map;
+
     }
 }

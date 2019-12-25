@@ -2,7 +2,7 @@
 
 #import <AMapFoundationKit/AMapFoundationKit.h>
 #import <AMapLocationKit/AMapLocationKit.h>
-
+#import "MyMapViewFactory.h"
 
 /*
 static NSDictionary* DesiredAccuracy = @{@"kCLLocationAccuracyBest":@(kCLLocationAccuracyBest),
@@ -31,6 +31,9 @@ static NSDictionary* DesiredAccuracy = @{@"kCLLocationAccuracyBest":@(kCLLocatio
     AmapLocationPlugin* instance = [[AmapLocationPlugin alloc] init];
     instance.channel = channel;
     [registrar addMethodCallDelegate:instance channel:channel];
+    
+    MyMapViewFactory *myMapViewFactory = [[MyMapViewFactory alloc] initWithMessenger:registrar.messenger channel:channel];
+    [registrar registerViewFactory:myMapViewFactory withId:@"location_map"];
 }
 
 

@@ -41,7 +41,7 @@ class _HomeState extends State<Home> {
 
   //初始化ios
   initIOS() {
-    AMapLocationClient.setApiKey("03c4bf8bce858794df1739b475606ace");
+    AMapLocationClient.setApiKey("646dbec6430badb727e5869a094d53e8");
     //启动客户端,这里设置ios端的精度小一点
     AMapLocationClient.startup(new AMapLocationOption(
         desiredAccuracy: CLLocationAccuracy.kCLLocationAccuracyHundredMeters));
