@@ -1,4 +1,5 @@
-@@ -1,184 +1,14 @@
+这个版本是基于 best-flutter/flutter_amap_location 上进行开发的 修复了ios上打开点位奔溃的问题  升级了高德sdk的版本 
+
 # amap_location
 
 <p align="center">
