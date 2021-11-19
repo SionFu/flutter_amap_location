@@ -122,8 +122,12 @@ class MyMapView implements PlatformView, LocationSource, GeocodeSearch.OnGeocode
                 geocoderSearch.getFromLocationAsyn(query);
             }
         });
-
-        geocoderSearch = new GeocodeSearch(mContext);
+        try {
+                geocoderSearch = new GeocodeSearch(mContext); 
+                      } catch (Exception e) {
+                   e.printStackTrace();
+                      }
+        
         geocoderSearch.setOnGeocodeSearchListener(this);
     }
 
@@ -192,7 +196,11 @@ class MyMapView implements PlatformView, LocationSource, GeocodeSearch.OnGeocode
     public void activate(OnLocationChangedListener listener) {
         mListener = listener;
         if (mlocationClient == null) {
-            mlocationClient = new AMapLocationClient(mContext);
+            try {
+                mlocationClient = new AMapLocationClient(mContext);  
+                      } catch (Exception e) {
+                   e.printStackTrace();
+                      }
             mLocationOption = new AMapLocationClientOption();
             //设置定位监听
             mlocationClient.setLocationListener(this);

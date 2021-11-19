@@ -221,7 +221,11 @@ public class AmapLocationPlugin implements MethodCallHandler, AMapLocationListen
 
             if (locationClient == null) {
                 //初始化client
-                locationClient = new AMapLocationClient(getApplicationContext());
+                try {
+                locationClient = new AMapLocationClient(getApplicationContext());  
+                      } catch (Exception e) {
+                   e.printStackTrace();
+                      }
                 //设置定位参数
                 AMapLocationClientOption option = new AMapLocationClientOption();
                 parseOptions(option, arguments);
